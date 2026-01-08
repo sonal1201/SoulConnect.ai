@@ -41,8 +41,8 @@ export const BentoGrid = () => {
           </div>
 
           {/* 2. SECURITY  */}
-          <div className="md:col-span-4 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:border-red-500/20">
-            <div className="absolute inset-x-0 bottom-0  h-2/3 bg-linear-to-t from-red-950/20 to-transparent opacity-50" />
+          <div className="md:col-span-4 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:border-blue-500/20">
+            <div className="absolute inset-x-0 bottom-0  h-2/3 bg-linear-to-t from-blue-950/20 to-transparent opacity-50" />
 
             <div className="relative z-10 flex flex-col h-full items-center text-center">
               <div className="mb-12 relative">
@@ -61,7 +61,7 @@ export const BentoGrid = () => {
 
               <div className="mt-auto w-full border-t border-white/5 pt-6 flex justify-between text-xs font-mono text-zinc-500 uppercase tracking-wider">
                 <span>Mode</span>
-                <span className="text-red-400">Hidden</span>
+                <span className="text-blue-400">Hidden</span>
               </div>
             </div>
           </div>
