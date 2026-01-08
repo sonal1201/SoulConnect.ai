@@ -8,15 +8,30 @@ The platform connects users based on personality compatibility and preferences u
 
 ## 2. User Flows
 
-### A. Male User Flow (Onboarding)
+### A. Authentication & Onboarding
 
-1.  **Registration**: User signs up.
-2.  **Interactive Questionnaire**:
-    - The system (LLM) initiates a conversation, asking **10 questions** to understand the user's personality, interests, and values.
-3.  **Profile Generation & Storage**:
-    - The LLM synthesizes the user's responses.
-    - The summarized profile is converted into a **vector embedding**.
-    - The embedding and metadata are stored in a **Vector Database**.
+This flow handles the split between New Users, Existing Males, and Existing Females.
+
+1.  **Google Sign-In**:
+    - User clicks "Login with Google".
+    - **Check DB**: Backend checks if `email` exists in Postgres.
+    - **Scenario A: New User**
+      - Redirect to `/onboarding`.
+      - **Step 1**: Ask "Are you a Boy or a Girl?"
+      - **Step 2 (Boy)**: Redirect to `/interview` (The 10 Question Chat).
+      - **Step 2 (Girl)**: Redirect to `/search` (The Partner Search).
+    - **Scenario B: Existing User**
+      - **Check Profile Status**:
+        - Is `gender == MALE`? -> Go to `/dashboard` (Show incoming requests or Chat).
+        - Is `gender == FEMALE`? -> Go to `/search` or `/dashboard` (If matched).
+
+### B. Male User Flow (The Interview)
+
+1.  **Start Interview**: System initiates the 10-question personality test.
+2.  **Profile Generation**:
+    - LLM synthesizes responses.
+    - Profile is converted to a **Vector Embedding**.
+    - Stored in **Qdrant**.
 
 ### B. Female User Flow (Discovery)
 
