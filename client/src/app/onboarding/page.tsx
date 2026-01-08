@@ -27,7 +27,7 @@ export default function OnboardingPage() {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <motion.div
           whileHover={{ scale: 1.1 }}
@@ -37,7 +37,7 @@ export default function OnboardingPage() {
         </motion.div>
 
         <h2 className="mt-8 text-4xl font-bold tracking-tight z-10">
-          I am a Boy
+          I am a Man
         </h2>
         <p className="mt-4 text-zinc-400 text-center max-w-sm z-10 group-hover:text-zinc-300 transition-colors">
           Take the 10-question personality interview to create your hidden
@@ -63,7 +63,7 @@ export default function OnboardingPage() {
         </motion.div>
 
         <h2 className="mt-8 text-4xl font-bold tracking-tight z-10">
-          I am a Girl
+          I am a Woman
         </h2>
         <p className="mt-4 text-zinc-400 text-center max-w-sm z-10 group-hover:text-zinc-300 transition-colors">
           Describe your ideal partner and find matches based on true
@@ -73,9 +73,12 @@ export default function OnboardingPage() {
 
       {/* Branding Overlay */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center pointer-events-none z-20">
-        <h1 className="text-xl font-medium tracking-[0.2em] text-zinc-500 uppercase">
+        <h1 className="text-xl font-medium tracking-[0.2em] text-red-100 uppercase">
           SoulConnect.ai
         </h1>
+        <h3 className="text-sm mt-2 font-light tracking-[0.1em] text-red-100 ">
+          Select your gender
+        </h3>
       </div>
     </div>
   );
