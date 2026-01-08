@@ -49,10 +49,11 @@ The platform connects users based on personality compatibility and preferences u
     - Upon mutual agreement, the server exchanges their **Instagram IDs**.
     - Users can now connect off-platform.
 
-## 5. Technical Stack (Suggested)
+## 5. Technical Stack
 
 - **Frontend**: Next.js / React (for the web interface).
 - **Backend**: Node.js / Python (FastAPI/Django).
 - **AI/LLM**: OpenAI API / Anthropic Claude / Gemini (for interview and summarization).
 - **Vector Database**: Pinecone / Weaviate / Milvus (for similarity search).
 - **Database**: PostgreSQL / MongoDB (for user data and state management).
+
