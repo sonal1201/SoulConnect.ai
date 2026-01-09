@@ -15,8 +15,8 @@ export const BentoGrid = () => {
           className="grid grid-cols-1 md:grid-cols-12 gap-6"
         >
           {/* 1. MAIN FEATURE */}
-          <div className="group md:col-span-8 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 md:p-14 transition-all duration-500 hover:shadow-2xl hover:shadow-red-900/20">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.15),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <div className="group md:col-span-8 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 md:p-14 transition-all duration-500  hover:border-red-500/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.15),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10 flex flex-col h-full justify-between gap-8">
               <div className="flex justify-between items-start">
@@ -42,6 +42,7 @@ export const BentoGrid = () => {
 
           {/* 2. SECURITY  */}
           <div className="md:col-span-4 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:border-blue-500/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.15),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="absolute inset-x-0 bottom-0  h-2/3 bg-linear-to-t from-blue-950/20 to-transparent opacity-50" />
 
             <div className="relative z-10 flex flex-col h-full items-center text-center">
@@ -67,7 +68,8 @@ export const BentoGrid = () => {
           </div>
 
           {/* 3. INSTANT */}
-          <div className="group md:col-span-4 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:bg-zinc-900/50">
+          <div className="group md:col-span-4 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:border-yellow-500/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(234,179,8,0.15),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="flex flex-col gap-6">
               <Zap className="w-10 duration-500 group-hover:text-yellow-500 h-10 text-white" />
               <div>
@@ -80,7 +82,8 @@ export const BentoGrid = () => {
           </div>
 
           {/* 4. SECURE */}
-          <div className="group md:col-span-4 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:bg-zinc-900/50">
+          <div className="group md:col-span-4 relative group overflow-hidden rounded-[2.5rem] bg-[#0A0A0A] border border-white/5 p-10 transition-all duration-500 hover:border-green-500/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.15),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="flex flex-col gap-6">
               <Shield className="w-10 h-10 text-white duration-500 group-hover:text-green-500" />
               <div>

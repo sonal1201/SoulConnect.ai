@@ -12,8 +12,9 @@ export const Navbar = () => {
         </span>
       </div>
       <ShinyButton
+        disabled={true}
         onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
-        className="text-sm font-medium bg-transparent text-red-200 hover:text-red-500 transition-colors"
+        className="text-sm font-bold  bg-rose-500 text-white  hover:bg-rose-600 transition-colors cursor-not-allowed"
       >
         Login
       </ShinyButton>
