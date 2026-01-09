@@ -13,7 +13,9 @@ app.use(morgan("dev"));
 
 // Health Check
 app.get("/api/health", (req, res) => {
-    res.json({ status: "ok", message: "Server is running 🚀" });
+    res.status(200).json({
+        status: "ok",
+    });
 });
 
 export default app;
