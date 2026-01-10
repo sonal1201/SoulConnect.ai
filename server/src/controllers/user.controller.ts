@@ -3,11 +3,14 @@ import { Request, Response } from "express"
 import { User } from "../models/user.model";
 
 
-// create 
+// create----------
 export const createUserProfile = tryCatch(
     async (req: Request, res: Response) => {
         const { email, fullname, gender, lookingFor, age, profile_summary } = req.body;
+
         console.log(email, fullname, gender, lookingFor, age, profile_summary)
+
+        //field check
         if (!email || !fullname || !gender || !lookingFor || !age || !profile_summary) {
             res.status(400).json({
                 message: "All fields are required"
@@ -15,15 +18,17 @@ export const createUserProfile = tryCatch(
             return;
         }
 
+        // find the user in Db
         const existingUser = await User.findOne({
             email
         })
 
-        console.log(existingUser)
+        // console.log(existingUser)
 
+        let result;
         if (!existingUser) {
             console.log("inside")
-            const result = await User.create({
+            result = await User.create({
                 email,
                 fullname,
                 gender,
@@ -35,22 +40,77 @@ export const createUserProfile = tryCatch(
             console.log(result)
         }
 
-        res.status(200).json({
+        res.status(201).json({
             message: "User Loggedin Successfully",
-            data: existingUser
+            data: result
         })
     }
 )
 
+// get user profile----------
 export const getUserProfile = tryCatch(
     async (req: Request, res: Response) => {
+        const { id } = req.params;
 
+        if (!id) {
+            res.status(400).json({
+                message: "UserId is required"
+            })
+            return
+        }
+
+        const findUser = await User.findOne({
+            _id: id
+        })
+
+        if (!findUser) {
+            res.status(404).json({
+                message: "User Not Found"
+            })
+            return
+        }
+
+        res.status(200).json({
+            message: "User profile is Fetched",
+            data: findUser
+        })
     }
 )
 
+//Delete User----------
 export const deleteUserProfile = tryCatch(
     async (req: Request, res: Response) => {
+        const { id } = req.params;
 
+        if (!id) {
+            res.status(400).json({
+                message: "UserId is required"
+            })
+            return
+        }
+
+        const findUser = await User.findById({
+            _id: id
+        })
+
+        console.log(findUser)
+        console.log("helddvdflo")
+
+
+        if (!findUser) {
+            res.status(404).json({
+                message: "User Not Found"
+            })
+            return
+        }
+
+        const deleteUser = await User.findByIdAndDelete({
+            _id: id
+        })
+
+        res.status(200).json({
+            message: "User Deleted Successfully",
+        })
     }
 )
 
