@@ -1,29 +1,38 @@
 import { tryCatch } from "../middlewares/tryCatch.middleware"
 import { Request, Response } from "express"
-import User from "../models/user.model";
+import { User } from "../models/user.model";
+
 
 // create 
 export const createUserProfile = tryCatch(
-    async (req: Request, res: Response): Promise<void> => {
-        const { email } = req.body;
-        console.log(email)
-
-        if (!email.trim()) {
+    async (req: Request, res: Response) => {
+        const { email, fullname, gender, lookingFor, age, profile_summary } = req.body;
+        console.log(email, fullname, gender, lookingFor, age, profile_summary)
+        if (!email || !fullname || !gender || !lookingFor || !age || !profile_summary) {
             res.status(400).json({
-                message: "Email is required"
+                message: "All fields are required"
             })
+            return;
         }
 
-        const existingUser = await User.find({
+        const existingUser = await User.findOne({
             email
         })
+
         console.log(existingUser)
 
         if (!existingUser) {
             console.log("inside")
-            await User.create({
-                email
+            const result = await User.create({
+                email,
+                fullname,
+                gender,
+                lookingFor,
+                age,
+                profile_summary
             })
+
+            console.log(result)
         }
 
         res.status(200).json({
