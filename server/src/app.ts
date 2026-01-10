@@ -13,7 +13,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 //route
-app.use('api/v1', v1Router)
+app.use('/api/v1', v1Router)
 
 // Health Check
 app.get("/api/health", (req, res) => {
