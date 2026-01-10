@@ -9,8 +9,6 @@ export const createAnswer = tryCatch(
 
         const { id } = req.params;
 
-        console.log(id, answers)
-
         if (!answers) {
             res
                 .status(401)
@@ -36,8 +34,6 @@ export const createAnswer = tryCatch(
             }
         )
 
-        
-
         res
             .status(200)
             .json(
@@ -49,6 +45,7 @@ export const createAnswer = tryCatch(
 
     }
 )
+
 
 
 
