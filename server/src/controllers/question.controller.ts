@@ -6,7 +6,7 @@ import { Question } from "../models/question.model";
 export const getQuestions = tryCatch(
     async (req: Request, res: Response) => {
 
-        const question = await Question.find();
+        const question = await Question.find().select("question options -_id");
 
         res
             .status(200)
