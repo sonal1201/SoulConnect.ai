@@ -14,6 +14,9 @@ const handler = NextAuth({
         },
         async signIn({ user, account, profile }) {
             // This is where we will add the "Sync with Backend" logic later
+            // console.log("USER", user);
+            // console.log("ACCOUNT", account);
+            // console.log("PROFILE", profile);
             return true;
         }
     },
