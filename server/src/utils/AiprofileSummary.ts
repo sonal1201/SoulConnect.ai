@@ -39,21 +39,23 @@ Special cases:
 Goal: Produce a short, clear, psychologically realistic paragraph that helps another emotionally aware person quickly judge basic compatibility fit — nothing more, nothing less.
 `
 
-export const AiprofileSummary = async () => {
+export const AiprofileSummary = async (
+    Qanswer: string
+): Promise<string> => {
 
-  const llm = new ChatGroq({
-    model: "llama-3.3-70b-versatile",
-    apiKey: process.env.GROQ_API_KEY!,
-  })
+    if (!Qanswer || Qanswer.trim().length === 0) {
+        throw new Error("Qanswer is empty");
+    }
 
-  const response = await llm.invoke([
-    {
-      role: "system",
-      content: SYSTEM_PROMPT,
-    },
-    // { role: "user", content:  },
-])
-  console.log(response.content)
+    const llm = new ChatGroq({
+        model: "llama-3.3-70b-versatile",
+        apiKey: process.env.GROQ_API_KEY!,
+    });
 
-}
+    const response = await llm.invoke([
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: Qanswer },
+    ]);
 
+    return response.content as string;
+};
