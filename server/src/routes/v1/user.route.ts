@@ -5,10 +5,11 @@ import { createUserProfile, deleteUserProfile, getUserProfile, healthCheck, upda
 const userRouter = express.Router()
 
 //rest apis of user
+userRouter.get('/health', healthCheck)
 userRouter.post('/', createUserProfile)
 userRouter.get('/:id', getUserProfile)
 userRouter.put('/:id', updateUserProfile)
 userRouter.delete('/:id', deleteUserProfile)
-userRouter.get('/health', healthCheck)
+
 
 export default userRouter
