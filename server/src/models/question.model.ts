@@ -1,26 +1,15 @@
 import mongoose from "mongoose"
 
 const questionSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    question: {
+        type: String,
         required: true,
     },
-
-    responses: [{
-        questionId: {
-            type: String,
-            required: true,
-        },
-        question: String,
-        answer: {
-            type: String,
-            maxlength: 500,
-        }
-    }]
-
-  
+    options: {
+        type: [String],
+        default: [],
+    },
 
 }, { timestamps: true })
 
-export default mongoose.model("Question", questionSchema)
+export const Question = mongoose.model("Question", questionSchema)
