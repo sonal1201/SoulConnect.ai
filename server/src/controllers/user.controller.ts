@@ -116,14 +116,14 @@ export const deleteUserProfile = tryCatch(
 
 export const updateUserProfile = tryCatch(
     async (req: Request, res: Response) => {
-        const { fullname, gender, lookingFor, age } = req.body;
+        // const { lookingFor, age } = req.body;
 
-        if (!fullname.trim() || !gender || !lookingFor || !age) {
-            res.status(400).json({
-                message: "All fields are Requried"
-            });
-            return;
-        }
+        // if (!fullname.trim() || !gender || !lookingFor || !age) {
+        //     res.status(400).json({
+        //         message: "All fields are Requried"
+        //     });
+        //     return;
+        // }
     }
 )
 

@@ -8,7 +8,7 @@ const userRouter = express.Router()
 userRouter.get('/health', healthCheck)
 userRouter.post('/', createUserProfile)
 userRouter.get('/:id', getUserProfile)
-userRouter.put('/:id', updateUserProfile)
+// userRouter.put('/:id', updateUserProfile)
 userRouter.delete('/:id', deleteUserProfile)
 
 
