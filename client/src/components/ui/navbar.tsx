@@ -5,7 +5,7 @@ import { ShinyButton } from "@/components/ui/shiny-button";
 
 export const Navbar = () => {
   return (
-    <nav className="relative z-50 w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+    <nav className=" z-50 w-full max-w-7xl mx-auto px-6 py-6 sticky flex justify-between items-center">
       <div className="flex items-center gap-2">
         <span className=" tracking-[0.1em] text-xl text-red-50 uppercase font-medium ">
           SoulConnect.ai

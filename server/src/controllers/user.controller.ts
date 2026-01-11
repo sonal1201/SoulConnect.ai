@@ -6,12 +6,10 @@ import { User } from "../models/user.model";
 // create----------
 export const createUserProfile = tryCatch(
     async (req: Request, res: Response) => {
-        const { email, fullname, gender, lookingFor, age, profile_summary } = req.body;
-
-        console.log(email, fullname, gender, lookingFor, age, profile_summary)
+        const { email, fullname, gender, lookingFor, age } = req.body;
 
         //field check
-        if (!email || !fullname || !gender || !lookingFor || !age || !profile_summary) {
+        if (!email || !fullname || !gender || !lookingFor || !age ) {
             res.status(400).json({
                 message: "All fields are required"
             })
@@ -33,8 +31,7 @@ export const createUserProfile = tryCatch(
                 fullname,
                 gender,
                 lookingFor,
-                age,
-                profile_summary
+                age
             })
 
             console.log(result)
