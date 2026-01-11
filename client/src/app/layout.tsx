@@ -29,18 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <Providers>
+          <Navbar />
           {children}
-
-          <Toaster richColors position="top-center" theme="dark" />
+          <Toaster richColors position="top-center" theme="light" />
         </Providers>
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
-        >
-        <Navbar/>
-        {children}
-        <Toaster richColors position="top-center" theme="light" />
       </body>
     </html>
   );
