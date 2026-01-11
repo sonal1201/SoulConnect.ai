@@ -22,7 +22,7 @@ const staggerContainer = {
 };
 
 export const HeroSection = () => {
-  const [waitlist, setWaitlist] = useState(false);
+  const [waitlist, setWaitlist] = useState(true);
   // const router = useRouter();
 
   return (
