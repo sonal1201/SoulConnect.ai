@@ -3,6 +3,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 
 interface Question {
   question: string
@@ -14,7 +15,6 @@ interface Answer {
   answer: string
 }
 
-const userid = "507f1f77bcf86cd799439016"
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -27,6 +27,7 @@ function Page() {
   const [selected, setSelected] = useState('')
   const [answers, setAnswers] = useState<Answer[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -62,11 +63,14 @@ function Page() {
   const handleSubmit = async () => {
     const finalAnswers = [...answers, saveAnswer()]
     try {
+      const id = sessionStorage.getItem("userid")
+
       await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/answer/${userid}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/answer/${id}`,
         { answers: finalAnswers }
       )
-      alert('Answers submitted successfully 🎉')
+      router.push(`/profile/${id}`);
+
     } catch (error) {
       console.log(error)
     }
