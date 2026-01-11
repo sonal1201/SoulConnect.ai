@@ -25,6 +25,7 @@
     "helmet": "^8.1.0",
     "langchain": "^1.2.7",
     "mongodb": "^7.0.0",
+    "mongoose": "^9.1.2",
     "morgan": "^1.10.1"
   },
   "devDependencies": {

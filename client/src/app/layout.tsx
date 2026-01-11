@@ -4,6 +4,8 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import Providers from "@/_app";
+import { Navbar } from "@/components/ui/navbar";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,6 +36,11 @@ export default function RootLayout({
 
           <Toaster richColors position="top-center" theme="dark" />
         </Providers>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
+        >
+        <Navbar/>
+        {children}
+        <Toaster richColors position="top-center" theme="light" />
       </body>
     </html>
   );
