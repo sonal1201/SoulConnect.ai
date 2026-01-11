@@ -27,10 +27,6 @@ export default function Home() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-rose-900/10 rounded-full blur-[120px] animate-pulse delay-1000" />
       </div>
 
-      {/* Navbar */}
-      {/* Navbar */}
-      <Navbar />
-
       {/* Hero Section */}
       <HeroSection />
 

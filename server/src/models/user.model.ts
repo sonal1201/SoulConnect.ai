@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const userSchema = new mongoose.Schema({
     fullname: {
@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema({
 
     profile_summary: {
         type: String,
-        required: true,
         trim: true,
     },
 

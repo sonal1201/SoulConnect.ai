@@ -1,85 +1,216 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import { User, Heart } from "lucide-react";
+import axios from "axios";
 
-export default function OnboardingPage() {
-  const router = useRouter();
+interface GoogleUser {
+  email?: string;
+}
 
-  const handleSelection = (gender: "MALE" | "FEMALE") => {
-    // In a real app, we would save this to the database/session here
-    if (gender === "MALE") {
-      router.push("/interview");
-    } else {
-      router.push("/search");
+interface ProfileFormData {
+  fullname: string;
+  email: string;
+  gender: string;
+  lookingFor: string;
+  age: string;
+}
+
+interface CompleteProfileFormProps {
+  googleUser?: GoogleUser;
+  onSubmit: (data: ProfileFormData) => void;
+}
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+export default function CompleteProfileForm({
+  googleUser,
+  onSubmit,
+}: CompleteProfileFormProps) {
+  const [formData, setFormData] = useState<ProfileFormData>({
+    fullname: "",
+    email: googleUser?.email || "hello@gmail.com",
+    gender: "",
+    lookingFor: "",
+    age: "",
+  });
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      // setLoading(true);
+      console.log(formData);
+      const res = await axios.post(
+        "http://localhost:5001/api/v1/user/",
+        {
+          ...formData
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Profile created:", res.data);
+
+      // example: redirect to dashboard
+      // router.push("/question");
+    } catch (error: any) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    } finally {
+      // setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-black text-white">
-      {/* MALE Section */}
+    <section className="relative z-10 flex items-center justify-center px-6 py-20">
       <motion.div
-        className="flex-1 flex flex-col items-center justify-center p-10 cursor-pointer relative group border-b md:border-b-0 md:border-r border-gray-800 hover:bg-zinc-900 transition-colors duration-500"
-        onClick={() => handleSelection("MALE")}
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="w-full max-w-2xl mx-auto"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          className="z-10 bg-zinc-800 p-6 rounded-full border border-zinc-700 shadow-2xl shadow-blue-500/20"
-        >
-          <User className="w-16 h-16 text-blue-400" />
+        <motion.div variants={fadeInUp} className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-linear-to-b from-white via-white/90 to-white/50">
+            Complete Your Profile
+          </h1>
+          <p className="text-lg md:text-xl text-zinc-400 max-w-xl mx-auto leading-relaxed">
+            Tell us about yourself to find your perfect{" "}
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-red-300 to-rose-700">
+              soul connection
+            </span>
+          </p>
         </motion.div>
 
-        <h2 className="mt-8 text-4xl font-bold tracking-tight z-10">
-          I am a Man
-        </h2>
-        <p className="mt-4 text-zinc-400 text-center max-w-sm z-10 group-hover:text-zinc-300 transition-colors">
-          Take the 10-question personality interview to create your hidden
-          profile.
-        </p>
-      </motion.div>
-
-      {/* FEMALE Section */}
-      <motion.div
-        className="flex-1 flex flex-col items-center justify-center p-10 cursor-pointer relative group hover:bg-zinc-900 transition-colors duration-500"
-        onClick={() => handleSelection("FEMALE")}
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          className="z-10 bg-zinc-800 p-6 rounded-full border border-zinc-700 shadow-2xl shadow-pink-500/20"
+        <motion.form
+          variants={fadeInUp}
+          onSubmit={handleSubmit}
+          className="space-y-6"
         >
-          <Heart className="w-16 h-16 text-pink-400" />
-        </motion.div>
+          {/* Full Name */}
+          <motion.div variants={fadeInUp}>
+            <label className="block text-zinc-300 text-sm font-medium mb-3 tracking-wide">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="fullname"
+              value={formData.fullname}
+              onChange={handleChange}
+              className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all placeholder:text-zinc-500 hover:border-zinc-700"
+              placeholder="Enter your full name"
+              required
+            />
+          </motion.div>
 
-        <h2 className="mt-8 text-4xl font-bold tracking-tight z-10">
-          I am a Woman
-        </h2>
-        <p className="mt-4 text-zinc-400 text-center max-w-sm z-10 group-hover:text-zinc-300 transition-colors">
-          Describe your ideal partner and find matches based on true
-          personality.
-        </p>
+          {/* Gender & Age - Side by side on larger screens */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <motion.div variants={fadeInUp}>
+              <label className="block text-zinc-300 text-sm font-medium mb-3 tracking-wide">
+                Gender
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all appearance-none cursor-pointer hover:border-zinc-700"
+                required
+              >
+                <option value="" className="bg-zinc-900">
+                  Select gender
+                </option>
+                <option value="Male" className="bg-zinc-900">
+                  Male
+                </option>
+                <option value="Female" className="bg-zinc-900">
+                  Female
+                </option>
+                <option value="Other" className="bg-zinc-900">
+                  Other
+                </option>
+              </select>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <label className="block text-zinc-300 text-sm font-medium mb-3 tracking-wide">
+                Age
+              </label>
+              <input
+                type="number"
+                name="age"
+                min={18}
+                value={formData.age}
+                onChange={handleChange}
+                className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all placeholder:text-zinc-500 hover:border-zinc-700"
+                placeholder="18+"
+                required
+              />
+            </motion.div>
+          </div>
+
+          {/* Looking For */}
+          <motion.div variants={fadeInUp}>
+            <label className="block text-zinc-300 text-sm font-medium mb-3 tracking-wide">
+              Looking For
+            </label>
+            <select
+              name="lookingFor"
+              value={formData.lookingFor}
+              onChange={handleChange}
+              className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all appearance-none cursor-pointer hover:border-zinc-700"
+              required
+            >
+              <option value="" className="bg-zinc-900">
+                Select preference
+              </option>
+              <option value="Male" className="bg-zinc-900">
+                Male
+              </option>
+              <option value="Female" className="bg-zinc-900">
+                Female
+              </option>
+              <option value="Everyone" className="bg-zinc-900">
+                Everyone
+              </option>
+            </select>
+          </motion.div>
+
+          {/* Submit Button */}
+          <motion.div variants={fadeInUp} className="pt-6">
+            <button
+              type="submit"
+              className="w-full cursor-pointer bg-linear-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-bold text-lg py-4 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-black"
+            >
+              Continue to SoulConnect
+            </button>
+          </motion.div>
+        </motion.form>
       </motion.div>
-
-      {/* Branding Overlay */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center pointer-events-none z-20">
-        <h1 className="text-xl font-medium tracking-[0.2em] text-red-100 uppercase">
-          SoulConnect.ai
-        </h1>
-        <h3 className="text-sm mt-2 font-light tracking-[0.1em] text-red-100 ">
-          Select your gender
-        </h3>
-      </div>
-    </div>
+    </section>
   );
 }
