@@ -43,12 +43,18 @@ export default function CompleteProfileForm() {
     age: "",
   });
 
+  // Sync email from session or sessionStorage
   useEffect(() => {
-    const email = sessionStorage.getItem("user");
-    if (email) {
-      setFormData((prev) => ({ ...prev, email }));
+    const sessionEmail = session?.user?.email;
+    const storedEmail = sessionStorage.getItem("user");
+
+    if (sessionEmail) {
+      setFormData((prev) => ({ ...prev, email: sessionEmail }));
+      sessionStorage.setItem("user", sessionEmail);
+    } else if (storedEmail) {
+      setFormData((prev) => ({ ...prev, email: storedEmail }));
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -70,14 +76,22 @@ export default function CompleteProfileForm() {
     e.preventDefault();
 
     try {
-      const email = sessionStorage.getItem("user");
-      // setLoading(true);
-      console.log(formData);
+      const emailToSubmit =
+        formData.email ||
+        sessionStorage.getItem("user") ||
+        session?.user?.email;
+
+      if (!emailToSubmit) {
+        toast.error("Email is missing. Please try logging in again.");
+        return;
+      }
+
+      console.log("Submitting formData:", formData);
       const res = await axios.post(
         "http://localhost:5001/api/v1/user/",
         {
           ...formData,
-          email,
+          email: emailToSubmit,
         },
         {
           headers: {
@@ -134,6 +148,21 @@ export default function CompleteProfileForm() {
               className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all placeholder:text-zinc-500 hover:border-zinc-700"
               placeholder="Enter your full name"
               required
+            />
+          </motion.div>
+
+          {/* Email (Read-only) */}
+          <motion.div variants={fadeInUp}>
+            <label className="block text-zinc-300 text-sm font-medium mb-3 tracking-wide">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              readOnly
+              className="w-full bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 text-zinc-500 rounded-xl px-5 py-4 text-lg cursor-not-allowed"
+              placeholder="Captured from login"
             />
           </motion.div>
 
