@@ -99,7 +99,7 @@ export default function CompleteProfileForm() {
           },
         }
       );
-      console.log(res.data);
+      sessionStorage.setItem("userid",res.data.data._id)
 
       toast.success("Profile Created");
       router.push("/question");
