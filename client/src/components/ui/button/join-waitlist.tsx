@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ShinyButton } from "../shiny-button";
 import { toast } from "sonner";
 import { ArrowRight, Loader2 } from "lucide-react";
+import axios from "axios";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -18,24 +19,42 @@ const JoinWaitlist = () => {
     setIsWaitlistVisible(true);
   };
 
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email) {
       toast.error("Please enter a valid email address.");
       return;
     }
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+      const { data } = await axios.post<{ message: string }>(
+        `${BACKEND_URL}/join-waitlist`,
+        { email }
+      );
 
-    setIsLoading(false);
-    toast.success("Welcome to the waitlist! We'll be in touch soon.");
+      toast.success(data.message);
 
-    // Reset state after success
-    setEmail("");
-    setIsWaitlistVisible(false);
+      setEmail("");
+      setIsWaitlistVisible(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.";
+        toast.error(message);
+      } else {
+        toast.error("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <motion.div
       variants={fadeInUp}

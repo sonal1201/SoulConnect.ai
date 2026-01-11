@@ -1,12 +1,20 @@
 "use client";
 
-import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Heart } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function OnboardingPage() {
+  const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/");
+    }
+  }, [router, status]);
 
   const handleSelection = (gender: "MALE" | "FEMALE") => {
     // In a real app, we would save this to the database/session here
