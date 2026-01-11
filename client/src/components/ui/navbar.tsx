@@ -11,13 +11,13 @@ export const Navbar = () => {
           SoulConnect.ai
         </span>
       </div>
-      <ShinyButton
+      {/* <ShinyButton
         disabled={true}
         onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
-        className="text-sm font-bold  bg-rose-500 text-white  hover:bg-rose-600 transition-colors cursor-not-allowed"
+        className="text-sm font-bold rounded-xl  bg-rose-500 text-white  hover:bg-rose-600 transition-colors cursor-not-allowed"
       >
         Login
-      </ShinyButton>
+      </ShinyButton> */}
     </nav>
   );
 };
