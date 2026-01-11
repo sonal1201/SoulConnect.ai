@@ -1,34 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { User, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-
-export default function OnboardingPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/");
-    }
-  }, [router, status]);
-
-  const handleSelection = (gender: "MALE" | "FEMALE") => {
-    // In a real app, we would save this to the database/session here
-    if (gender === "MALE") {
-      router.push("/interview");
-    } else {
-      router.push("/search");
 import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
-interface GoogleUser {
-  email?: string;
-}
+import { toast } from "sonner";
 
 interface ProfileFormData {
   fullname: string;
@@ -36,11 +14,6 @@ interface ProfileFormData {
   gender: string;
   lookingFor: string;
   age: string;
-}
-
-interface CompleteProfileFormProps {
-  googleUser?: GoogleUser;
-  onSubmit: (data: ProfileFormData) => void;
 }
 
 const fadeInUp = {
@@ -58,17 +31,30 @@ const staggerContainer = {
   },
 };
 
-export default function CompleteProfileForm({
-  googleUser,
-  onSubmit,
-}: CompleteProfileFormProps) {
+export default function CompleteProfileForm() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [formData, setFormData] = useState<ProfileFormData>({
     fullname: "",
-    email: googleUser?.email || "hello@gmail.com",
+    email: "",
     gender: "",
     lookingFor: "",
     age: "",
   });
+
+  useEffect(() => {
+    const email = sessionStorage.getItem("user");
+    if (email) {
+      setFormData((prev) => ({ ...prev, email }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/");
+    }
+  }, [router, status]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -84,12 +70,14 @@ export default function CompleteProfileForm({
     e.preventDefault();
 
     try {
+      const email = sessionStorage.getItem("user");
       // setLoading(true);
       console.log(formData);
       const res = await axios.post(
         "http://localhost:5001/api/v1/user/",
         {
-          ...formData
+          ...formData,
+          email,
         },
         {
           headers: {
@@ -97,11 +85,10 @@ export default function CompleteProfileForm({
           },
         }
       );
+      console.log(res.data);
 
-      console.log("Profile created:", res.data);
-
-      // example: redirect to dashboard
-      // router.push("/question");
+      toast.success("Profile Created");
+      router.push("/question");
     } catch (error: any) {
       console.log(error.response?.data?.message || "Something went wrong");
     } finally {
@@ -160,6 +147,7 @@ export default function CompleteProfileForm({
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
+                aria-label="Gender"
                 className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all appearance-none cursor-pointer hover:border-zinc-700"
                 required
               >
@@ -204,6 +192,7 @@ export default function CompleteProfileForm({
               name="lookingFor"
               value={formData.lookingFor}
               onChange={handleChange}
+              aria-label="Looking For"
               className="w-full bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 text-white rounded-xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all appearance-none cursor-pointer hover:border-zinc-700"
               required
             >
