@@ -2,7 +2,7 @@ import { tryCatch } from "../middlewares/tryCatch.middleware"
 import { Request, Response } from "express"
 import { Question } from "../models/question.model";
 
-// ✅ Get all questions
+// Get all questions
 export const getQuestions = tryCatch(
     async (req: Request, res: Response) => {
 
@@ -20,7 +20,7 @@ export const getQuestions = tryCatch(
     }
 )
 
-// ✅ Add a new question
+// Add a new question
 export const addQuestions = tryCatch(
     async (req: Request, res: Response) => {
 

@@ -29,14 +29,14 @@ export const createAnswer = tryCatch(
                 })
         }
 
-        const creatAnswer = await Answer.create(
+        const createAnswer = await Answer.create(
             {
                 userId: id,
                 answer: answers
             }
         )
 
-        const answersofUser = creatAnswer.answer
+        const answersofUser = createAnswer.answer
             .map((item: { question: string; answer: string }, index: number) => {
                 return `${index + 1}. Q: ${item.question}\n   A: ${item.answer}`;
             })
@@ -59,7 +59,7 @@ export const createAnswer = tryCatch(
             .json(
                 {
                     message: "Answers submitted succesfully",
-                    Answers: creatAnswer
+                    Answers: createAnswer
                 }
             )
 
