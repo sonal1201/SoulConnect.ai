@@ -1,15 +1,22 @@
-import express from "express"
-import { createUserProfile, deleteUserProfile, getUserProfile, healthCheck, updateUserProfile } from "../../controllers/user.controller"
+import express from "express";
+import {
+  checkUser,
+  createUserProfile,
+  deleteUserProfile,
+  getUserProfile,
+  healthCheck,
+  updateUserProfile,
+} from "../../controllers/user.controller";
 
+const userRouter = express.Router();
 
-const userRouter = express.Router()
+userRouter.get("/health", healthCheck);
+userRouter.post("/check", checkUser);
 
-//rest apis of user
-userRouter.get('/health', healthCheck)
-userRouter.post('/', createUserProfile)
-userRouter.get('/:id', getUserProfile)
-// userRouter.put('/:id', updateUserProfile)
-userRouter.delete('/:id', deleteUserProfile)
+// dynamic routes
+userRouter.post("/", createUserProfile);
+userRouter.patch("/:id", updateUserProfile);
+userRouter.get("/:id", getUserProfile);
+userRouter.delete("/:id", deleteUserProfile);
 
-
-export default userRouter
+export default userRouter;

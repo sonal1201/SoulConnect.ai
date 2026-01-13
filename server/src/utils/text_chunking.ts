@@ -1,10 +1,7 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters"
 
-type ProfileSummary = {
-    profileSummary: string
-}
 
-export const summaryChucking = async ({ profileSummary }: ProfileSummary) => {
+export const textChucking = async (profileSummary: string) => {
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: 1000, chunkOverlap: 200, separators: [
             "\n\n",
@@ -21,7 +18,7 @@ export const summaryChucking = async ({ profileSummary }: ProfileSummary) => {
         ],
     })
 
-    const profilechunk = splitter.splitText(profileSummary)
+    const profilechunk = await splitter.splitText(profileSummary)
 
     return profilechunk;
 

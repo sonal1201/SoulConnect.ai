@@ -30,6 +30,29 @@ function Page() {
   const router = useRouter()
 
   useEffect(() => {
+  const userId = sessionStorage.getItem("userId");
+  const isOnboarded = sessionStorage.getItem("isOnboarded");
+  const questionAnswered = sessionStorage.getItem("questionAnswered");
+
+  // not logged in
+  if (!userId) {
+    router.replace("/");
+    return;
+  }
+
+  // profile not completed
+  if (isOnboarded !== "true") {
+    router.replace(`/profile/${userId}`);
+    return;
+  }
+
+  // questions already answered
+  if (questionAnswered === "true") {
+    router.replace(`/profile/${userId}`);
+  }
+}, [router]);
+
+  useEffect(() => {
     const fetchQuestion = async () => {
       try {
         const res = await axios.get(
@@ -61,20 +84,25 @@ function Page() {
   }
 
   const handleSubmit = async () => {
-    const finalAnswers = [...answers, saveAnswer()]
-    try {
-      const id = sessionStorage.getItem("userid")
+  const finalAnswers = [...answers, saveAnswer()];
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/answer/${id}`,
-        { answers: finalAnswers }
-      )
-      router.push(`/profile/${id}`);
+  try {
+    const id = sessionStorage.getItem("userId");
+    if (!id) return;
 
-    } catch (error) {
-      console.log(error)
-    }
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/answer/${id}`,
+      { answers: finalAnswers }
+    );
+
+    sessionStorage.setItem("questionAnswered", "true");
+
+    router.push(`/profile/${id}`);
+  } catch (error) {
+    console.log(error);
   }
+};
+
 
   if (loading) return <motion.div initial={{opacity:0}} animate={{opacity:1}} className="text-zinc-300 text-xl text-center min-h-screen flex items-center justify-center">Loading...</motion.div>
 
