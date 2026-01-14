@@ -5,44 +5,45 @@ import { User } from "../models/user.model";
 
 // create----------
 export const createUserProfile = tryCatch(
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response): Promise<void> => {
         const { email, fullname, gender, lookingFor, age } = req.body;
 
-        //field check
-        if (!email || !fullname || !gender || !lookingFor || !age ) {
+        // Field validation
+        if (!email || !fullname || !gender || !lookingFor || !age) {
             res.status(400).json({
-                message: "All fields are required"
-            })
-            return;
+                message: "All fields are required",
+            });
+            return
         }
 
-        // find the user in Db
-        const existingUser = await User.findOne({
-            email
-        })
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
 
-        // console.log(existingUser)
-
-        let result;
-        if (!existingUser) {
-            console.log("inside")
-            result = await User.create({
-                email,
-                fullname,
-                gender,
-                lookingFor,
-                age
-            })
-
-            console.log(result)
+        if (existingUser) {
+            res.status(200).json({
+                message: "Welcome back",
+                data: existingUser,
+            });
+            return
         }
+
+        // Create new user
+        const newUser = await User.create({
+            email,
+            fullname,
+            gender,
+            lookingFor,
+            age,
+            isOnboarded: true
+        });
 
         res.status(201).json({
-            message: "User Loggedin Successfully",
-            data: result
-        })
+            message: "User profile created successfully",
+            data: newUser,
+        });
     }
-)
+);
+
 
 // get user profile----------
 export const getUserProfile = tryCatch(
@@ -111,18 +112,28 @@ export const deleteUserProfile = tryCatch(
     }
 )
 
-export const updateUserProfile = tryCatch(
-    async (req: Request, res: Response) => {
-        // const { lookingFor, age } = req.body;
+export const updateUserProfile = tryCatch(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-        // if (!fullname.trim() || !gender || !lookingFor || !age) {
-        //     res.status(400).json({
-        //         message: "All fields are Requried"
-        //     });
-        //     return;
-        // }
+    const user = await User.findByIdAndUpdate(
+        id,
+        {
+            ...req.body,
+            isOnboarded: true,
+        },
+        { new: true, runValidators: true }
+    );
+
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
     }
-)
+
+    res.status(200).json({
+        message: "Onboarding completed",
+        data: user,
+    });
+});
 
 export const healthCheck = tryCatch(
     async (req: Request, res: Response) => {
@@ -131,3 +142,24 @@ export const healthCheck = tryCatch(
         })
     }
 )
+
+export const checkUser = tryCatch(async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    if (!email) {
+        res.status(400).json({ message: "Email required" });
+        return;
+    }
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+        user = await User.create({ email });
+    }
+
+    res.status(200).json({
+        userId: user._id,
+        isOnboarded: user.isOnboarded,
+        questionAnswered: user.questionAnswered,
+    });
+});

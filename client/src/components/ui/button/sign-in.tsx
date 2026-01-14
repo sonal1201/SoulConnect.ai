@@ -5,19 +5,11 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export const SignInButton = () => {
-  const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-
-  // // ✅ STORE EMAIL AFTER SIGN-IN
-  // useEffect(() => {
-  //   if (session?.user?.email) {
-  //     sessionStorage.setItem("user", session.user.email);
-  //   }
-  // }, [session]);
 
   const handleSignIn = async () => {
     setIsLoading(true);
-    await signIn("google", { callbackUrl: "/onboarding" });
+    await signIn("google", { callbackUrl: "/auth-redirect" });
   };
 
   return (

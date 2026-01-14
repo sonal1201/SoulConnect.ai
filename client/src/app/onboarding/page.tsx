@@ -31,9 +31,26 @@ const staggerContainer = {
   },
 };
 
-export default function CompleteProfileForm() {
+export default function  CompleteProfileForm() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+  const userId = sessionStorage.getItem("userId");
+  const isOnboarded = sessionStorage.getItem("isOnboarded");
+
+  // not logged in
+  if (!userId) {
+    router.replace("/");
+    return;
+  }
+
+  // already onboarded → block access
+  if (isOnboarded === "true") {
+    router.replace("/question"); // or /profile/dashboard
+  }
+}, [router]);
+
 
   const [formData, setFormData] = useState<ProfileFormData>({
     fullname: "",
@@ -46,11 +63,11 @@ export default function CompleteProfileForm() {
   // Sync email from session or sessionStorage
   useEffect(() => {
     const sessionEmail = session?.user?.email;
-    const storedEmail = sessionStorage.getItem("user");
+    const storedEmail = sessionStorage.getItem("userEmail");
 
     if (sessionEmail) {
       setFormData((prev) => ({ ...prev, email: sessionEmail }));
-      sessionStorage.setItem("user", sessionEmail);
+      sessionStorage.setItem("userEmail", sessionEmail);
     } else if (storedEmail) {
       setFormData((prev) => ({ ...prev, email: storedEmail }));
     }
@@ -73,42 +90,40 @@ export default function CompleteProfileForm() {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const emailToSubmit =
-        formData.email ||
-        sessionStorage.getItem("user") ||
-        session?.user?.email;
+  try {
+    const userId = sessionStorage.getItem("userId");
 
-      if (!emailToSubmit) {
-        toast.error("Email is missing. Please try logging in again.");
-        return;
-      }
-
-      console.log("Submitting formData:", formData);
-      const res = await axios.post(
-        "http://localhost:5001/api/v1/user/",
-        {
-          ...formData,
-          email: emailToSubmit,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      sessionStorage.setItem("userid",res.data.data._id)
-
-      toast.success("Profile Created");
-      router.push("/question");
-    } catch (error: any) {
-      console.log(error.response?.data?.message || "Something went wrong");
-    } finally {
-      // setLoading(false);
+    if (!userId) {
+      toast.error("Session expired. Please login again.");
+      router.replace("/");
+      return;
     }
-  };
+
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${userId}`,
+      {
+        fullname: formData.fullname,
+        gender: formData.gender,
+        age: Number(formData.age),
+        lookingFor: formData.lookingFor,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    sessionStorage.setItem("isOnboarded", "true");
+
+    toast.success("Profile completed 🎉");
+    router.push("/question");
+  } catch (error: any) {
+    console.error(error);
+    toast.error(error.response?.data?.message || "Something went wrong");
+  }
+};
+
 
   return (
     <section className="relative z-10 flex items-center justify-center px-6 py-20">
