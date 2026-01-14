@@ -3,6 +3,6 @@ import { AiprofileSearch } from "../../controllers/ai.controller"
 
 const aiRouter = express.Router()
 
-aiRouter.post('/', AiprofileSearch)
+aiRouter.post('/:id', AiprofileSearch)
 
 export default aiRouter

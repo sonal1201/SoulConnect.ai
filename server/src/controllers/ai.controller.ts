@@ -2,11 +2,14 @@ import { tryCatch } from "../middlewares/tryCatch.middleware"
 
 import { Request, Response } from "express"
 import { ProfileSearch } from "../services/profileSearch";
+import { profile } from "node:console";
+import { User } from "../models/user.model";
 
 
 export const AiprofileSearch = tryCatch(
     async (req: Request, res: Response): Promise<void> => {
-        const {userRequest} = req.body;
+        const { id } = req.params
+        const { userRequest } = req.body;
 
         if (!userRequest.trim()) {
             res.status(400).json({
@@ -15,15 +18,34 @@ export const AiprofileSearch = tryCatch(
             return;
         }
 
-        //Ai Profile Matching
-        const profileSearch = await ProfileSearch(userRequest);
+        const findUser = await User.findById(id);
 
-        console.log(profileSearch);
+        if(!findUser){
+            res.status(400).json({
+                message: "Please Signin"
+            })
+        }
+
+        const userLookingFor = findUser?.lookingFor as string
+
+        //Ai Profile Matching
+        const profileSearch = await ProfileSearch(userRequest, userLookingFor);
+
+        const result = profileSearch.map((profile) => ({
+            id: profile.id,
+            score: profile.score,
+            metadata: profile.payload?.metadata,
+        }));
+
+        console.log(result);
+
+
 
 
 
         res.status(200).json({
-            message: "Request processed successfully"
+            message: "Request processed successfully",
+            data: profileSearch
         });
-    }
-)
+
+    })

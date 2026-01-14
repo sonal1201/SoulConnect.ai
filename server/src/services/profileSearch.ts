@@ -1,5 +1,3 @@
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai"
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters"
 import dotenv from "dotenv"
 import { qdrantClient } from "../config/qdrantVectordb"
 import { textChucking } from "../utils/text_chunking"
@@ -10,7 +8,7 @@ dotenv.config()
 
 
 
-export const ProfileSearch = async (userRequest: string) => {
+export const ProfileSearch = async (userRequest: string , userLookingFor: string) => {
 
 
     const profilechunk = await textChucking(userRequest)
@@ -20,7 +18,21 @@ export const ProfileSearch = async (userRequest: string) => {
 
     console.log(seachEmbedd)
 
-    // const vectorSimilaritySearch = await qdrantClient. 
+    const results = await qdrantClient.search("soul-connect", {
+        vector: seachEmbedd,
+        limit: 3,
+        with_payload: true,
+        with_vector: false,
+        filter: {
+            must: [
+                {
+                    key: "metadata.gender",
+                    match: { value: userLookingFor },
+                },
+            ],
+        },
+    });
 
+    return results;
 
 }
