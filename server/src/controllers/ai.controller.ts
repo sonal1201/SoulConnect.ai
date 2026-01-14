@@ -20,7 +20,7 @@ export const AiprofileSearch = tryCatch(
 
         const findUser = await User.findById(id);
 
-        if(!findUser){
+        if (!findUser) {
             res.status(400).json({
                 message: "Please Signin"
             })
@@ -39,13 +39,23 @@ export const AiprofileSearch = tryCatch(
 
         console.log(result);
 
+        const userIds = result.map(
+            r => (r.metadata as { userId: string }).userId
+        );
+
+        const filterUserId = userIds.filter((userid) => userid !== id)
+
+        const users = await User.find({
+            _id: { $in: filterUserId }
+        });
 
 
+        console.log(userIds)
 
 
         res.status(200).json({
             message: "Request processed successfully",
-            data: profileSearch
+            data: users
         });
 
     })
